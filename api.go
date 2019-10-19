@@ -3,6 +3,7 @@ package furrytail
 import (
 	"errors"
 	"github.com/go-resty/resty"
+	"time"
 )
 
 //New creates new Furrytail Account instance and checks if the token is correct
@@ -30,6 +31,7 @@ func New(token string) (*Account, error) {
 
 	acc := Account{
 		client: client,
+		loc: *time.UTC,
 	}
 
 	err := acc.refreshToken()
@@ -38,6 +40,11 @@ func New(token string) (*Account, error) {
 	}
 
 	return &acc, nil
+}
+
+//SetLocation sets timezone for all conversions. Default is UTC
+func (a *Account) SetLocation(loc time.Location) {
+	a.loc = loc
 }
 
 func (a *Account) refreshToken() error {
